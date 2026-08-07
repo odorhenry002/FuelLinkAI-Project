@@ -30,6 +30,7 @@ from app.models.rfq import RFQ  # noqa: F401
 from app.models.quote import Quote  # noqa: F401
 from app.models.order import Order  # noqa: F401
 from app.models.delivery import Delivery  # noqa: F401
+from app.models.invoice import Invoice  # noqa: F401
 
 # Dependency to get database session
 def get_db():

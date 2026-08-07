@@ -29,3 +29,4 @@ class Order(Base):
     supplier = relationship("User", foreign_keys=[supplier_id], back_populates="sales_orders")
     company = relationship("Company", back_populates="orders")
     deliveries = relationship("Delivery", back_populates="order", cascade="all, delete-orphan")
+    invoices = relationship("Invoice", back_populates="order", cascade="all, delete-orphan")
