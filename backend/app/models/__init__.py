@@ -26,6 +26,8 @@ Base = declarative_base()
 # Import all models so they are registered with SQLAlchemy metadata
 from app.models.user import User  # noqa: F401
 from app.models.company import Company  # noqa: F401
+from app.models.rfq import RFQ  # noqa: F401
+from app.models.quote import Quote  # noqa: F401
 
 # Dependency to get database session
 def get_db():

@@ -21,3 +21,5 @@ class Company(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     users = relationship("User", back_populates="company")
+    rfqs = relationship("RFQ", back_populates="company")
+    quotes = relationship("Quote", back_populates="company")
