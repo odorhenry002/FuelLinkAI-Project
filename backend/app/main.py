@@ -17,6 +17,7 @@ from app.routers.rfqs import router as rfq_router
 from app.routers.orders import router as orders_router
 from app.routers.deliveries import router as deliveries_router
 from app.routers.invoices import router as invoices_router
+from app.routers.ai import router as ai_router
 
 # Create FastAPI application
 app = FastAPI(
@@ -45,6 +46,7 @@ app.include_router(rfq_router)
 app.include_router(orders_router)
 app.include_router(deliveries_router)
 app.include_router(invoices_router)
+app.include_router(ai_router)
 
 
 @app.on_event("startup")
