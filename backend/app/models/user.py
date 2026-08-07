@@ -24,3 +24,4 @@ class User(Base):
     quotes = relationship("Quote", foreign_keys="Quote.supplier_id", back_populates="supplier")
     purchased_orders = relationship("Order", foreign_keys="Order.buyer_id", back_populates="buyer")
     sales_orders = relationship("Order", foreign_keys="Order.supplier_id", back_populates="supplier")
+    deliveries = relationship("Delivery", foreign_keys="Delivery.transporter_id", back_populates="transporter")

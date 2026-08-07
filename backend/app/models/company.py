@@ -24,3 +24,4 @@ class Company(Base):
     rfqs = relationship("RFQ", back_populates="company")
     quotes = relationship("Quote", back_populates="company")
     orders = relationship("Order", back_populates="company")
+    deliveries = relationship("Delivery", back_populates="company")
