@@ -14,6 +14,7 @@ from app.routers.users import router as users_router
 from app.routers.dashboard import router as dashboard_router
 from app.routers.companies import router as companies_router
 from app.routers.rfqs import router as rfq_router
+from app.routers.orders import router as orders_router
 
 # Create FastAPI application
 app = FastAPI(
@@ -39,6 +40,7 @@ app.include_router(users_router)
 app.include_router(dashboard_router)
 app.include_router(companies_router)
 app.include_router(rfq_router)
+app.include_router(orders_router)
 
 
 @app.on_event("startup")

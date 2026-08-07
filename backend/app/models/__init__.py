@@ -28,6 +28,7 @@ from app.models.user import User  # noqa: F401
 from app.models.company import Company  # noqa: F401
 from app.models.rfq import RFQ  # noqa: F401
 from app.models.quote import Quote  # noqa: F401
+from app.models.order import Order  # noqa: F401
 
 # Dependency to get database session
 def get_db():

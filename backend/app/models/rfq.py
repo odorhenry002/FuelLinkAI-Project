@@ -26,3 +26,4 @@ class RFQ(Base):
     buyer = relationship("User", foreign_keys=[buyer_id], back_populates="rfqs")
     company = relationship("Company", back_populates="rfqs")
     quotes = relationship("Quote", back_populates="rfq", cascade="all, delete-orphan")
+    orders = relationship("Order", back_populates="rfq", cascade="all, delete-orphan")

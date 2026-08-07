@@ -23,3 +23,4 @@ class Company(Base):
     users = relationship("User", back_populates="company")
     rfqs = relationship("RFQ", back_populates="company")
     quotes = relationship("Quote", back_populates="company")
+    orders = relationship("Order", back_populates="company")
