@@ -52,3 +52,16 @@ def transporter_dashboard(current_user: User = Depends(require_roles("transporte
             "coordinate_routes",
         ],
     }
+
+
+@router.get("/buyer")
+def buyer_dashboard(current_user: User = Depends(require_roles("buyer", "admin"))):
+    return {
+        "message": "Buyer dashboard access granted.",
+        "buyer_actions": [
+            "compare_supplier_quotes",
+            "manage_purchase_orders",
+            "track_deliveries",
+            "forecast_consumption",
+        ],
+    }

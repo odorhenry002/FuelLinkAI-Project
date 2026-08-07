@@ -136,6 +136,14 @@ export default function DashboardPage() {
                   Open Transporter Dashboard
                 </Link>
               )}
+              {(user?.role === 'buyer' || !user?.role) && (
+                <Link
+                  href="/dashboard/buyer"
+                  className="mt-4 inline-block rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Open Buyer Dashboard
+                </Link>
+              )}
             </div>
           </div>
         </div>

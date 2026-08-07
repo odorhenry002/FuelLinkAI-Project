@@ -115,3 +115,26 @@ def test_transporter_dashboard_accessible_for_transporter_users(client):
     transporter_response = client.get("/api/dashboard/transporter", headers=auth_headers)
     assert transporter_response.status_code == 200
     assert "transporter_actions" in transporter_response.json()
+
+
+def test_buyer_dashboard_accessible_for_buyer_users(client):
+    buyer_data = {
+        "email": "buyer3@example.com",
+        "first_name": "Buyer3",
+        "last_name": "User",
+        "phone": "+1234567895",
+        "role": "buyer",
+        "password": "strongpassword",
+    }
+
+    client.post("/api/auth/register", json=buyer_data)
+    login_response = client.post(
+        "/api/auth/login",
+        json={"email": buyer_data["email"], "password": buyer_data["password"]},
+    )
+    access_token = login_response.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {access_token}"}
+
+    buyer_response = client.get("/api/dashboard/buyer", headers=auth_headers)
+    assert buyer_response.status_code == 200
+    assert "buyer_actions" in buyer_response.json()

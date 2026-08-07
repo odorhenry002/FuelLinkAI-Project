@@ -21,6 +21,11 @@ export interface TransporterDashboardResponse {
   transporter_actions: string[];
 }
 
+export interface BuyerDashboardResponse {
+  message: string;
+  buyer_actions: string[];
+}
+
 export async function getDashboardOverview(): Promise<DashboardOverviewResponse> {
   const response = await apiClient.get<DashboardOverviewResponse>('/api/dashboard/overview');
   return response.data;
@@ -38,5 +43,10 @@ export async function getSupplierDashboard(): Promise<SupplierDashboardResponse>
 
 export async function getTransporterDashboard(): Promise<TransporterDashboardResponse> {
   const response = await apiClient.get<TransporterDashboardResponse>('/api/dashboard/transporter');
+  return response.data;
+}
+
+export async function getBuyerDashboard(): Promise<BuyerDashboardResponse> {
+  const response = await apiClient.get<BuyerDashboardResponse>('/api/dashboard/buyer');
   return response.data;
 }
