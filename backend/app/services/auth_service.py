@@ -58,7 +58,7 @@ class AuthService:
 
     @staticmethod
     def refresh_tokens(refresh_token: str) -> Token:
-        payload = decode_token(refresh_token)
+        payload = decode_token(refresh_token, expected_token_type="refresh")
         if not payload or "sub" not in payload or "email" not in payload:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

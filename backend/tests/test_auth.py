@@ -36,3 +36,29 @@ def test_register_and_login_user(client):
     me_response = client.get("/api/auth/me", headers=auth_headers)
     assert me_response.status_code == 200
     assert me_response.json()["email"] == register_data["email"]
+
+
+def test_refresh_requires_refresh_token_type(client):
+    register_data = {
+        "email": "refresh-test@example.com",
+        "first_name": "Refresh",
+        "last_name": "User",
+        "phone": "+1234567891",
+        "role": "buyer",
+        "password": "strongpassword",
+    }
+
+    client.post("/api/auth/register", json=register_data)
+    login_response = client.post(
+        "/api/auth/login",
+        json={"email": register_data["email"], "password": register_data["password"]},
+    )
+
+    access_token = login_response.json()["access_token"]
+    refresh_response = client.post(
+        "/api/auth/refresh",
+        json={"refresh_token": access_token},
+    )
+
+    assert refresh_response.status_code == 401
+    assert "refresh token" in refresh_response.json()["detail"].lower()

@@ -56,8 +56,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
         expire = datetime.utcnow() + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
-    
-    to_encode.update({"exp": expire})
+
+    to_encode.update({"exp": expire, "token_type": "access"})
     encoded_jwt = jwt.encode(
         to_encode,
         settings.SECRET_KEY,
@@ -80,7 +80,7 @@ def create_refresh_token(data: dict) -> str:
     expire = datetime.utcnow() + timedelta(
         days=settings.REFRESH_TOKEN_EXPIRE_DAYS
     )
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "token_type": "refresh"})
     encoded_jwt = jwt.encode(
         to_encode,
         settings.SECRET_KEY,
@@ -89,12 +89,13 @@ def create_refresh_token(data: dict) -> str:
     return encoded_jwt
 
 
-def decode_token(token: str) -> dict | None:
+def decode_token(token: str, expected_token_type: str | None = None) -> dict | None:
     """
     Decode and verify a JWT token
     
     Args:
         token: JWT token string
+        expected_token_type: Optional token kind to enforce 
         
     Returns:
         Token data if valid, None otherwise
@@ -105,6 +106,8 @@ def decode_token(token: str) -> dict | None:
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM]
         )
+        if expected_token_type and payload.get("token_type") != expected_token_type:
+            raise JWTError(f"Unexpected token type: {payload.get('token_type')}")
         return payload
     except JWTError:
         return None

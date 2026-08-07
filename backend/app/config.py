@@ -6,7 +6,7 @@ This module loads and validates configuration from environment variables.
 
 from typing import Optional
 
-from pydantic import ConfigDict
+from pydantic import ConfigDict, model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -54,6 +54,24 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     model_config = ConfigDict(env_file=".env", case_sensitive=True, extra="allow")
+
+    @model_validator(mode="after")
+    def validate_runtime_security(self):
+        env_name = self.ENVIRONMENT.lower()
+
+        if env_name == "production":
+            insecure_secrets = {
+                "your-secret-key-change-in-production",
+                "change-me",
+                "dev-secret",
+                "secret",
+            }
+            if self.SECRET_KEY in insecure_secrets or len(self.SECRET_KEY) < 32:
+                raise ValueError("SECRET_KEY must be set to a secure value in production.")
+            if self.DATABASE_URL.startswith("sqlite"):
+                raise ValueError("Production environment cannot use SQLite. Use PostgreSQL.")
+
+        return self
 
     @property
     def allowed_origins_list(self) -> list:

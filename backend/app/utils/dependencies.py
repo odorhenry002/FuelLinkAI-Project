@@ -15,7 +15,7 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ) -> User:
-    payload = decode_token(token)
+    payload = decode_token(token, expected_token_type="access")
     if not payload or "sub" not in payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
