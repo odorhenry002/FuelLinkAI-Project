@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { api } from '../api/client';
-import { useAuth } from '../App';
+import AppLayout from '../components/AppLayout';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -8,7 +8,6 @@ interface ChatMessage {
 }
 
 export default function CopilotPage() {
-  const { token } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,10 +27,11 @@ export default function CopilotPage() {
     setLoading(true);
 
     try {
-      const response = await api.chat({
-        messages: [...messages, userMessage],
-      });
-      setMessages((prev) => [...prev, userMessage, response]);
+      const response = await api.chat([...messages, userMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: response.content },
+      ]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -46,33 +46,63 @@ export default function CopilotPage() {
   };
 
   return (
-    <div className="chat-page">
-      <div className="chat-header">
-        <h1>FuelLink AI Copilot</h1>
-        <p>Ask about suppliers, pricing, contracts, or procurement strategy.</p>
+    <AppLayout
+      title="FuelLink AI Copilot"
+      subtitle="Ask about suppliers, pricing, contracts, or procurement strategy"
+    >
+      <div className="card card-pad mb-4">
+        <p className="card-desc">
+          Your AI assistant is ready to help with supplier discovery, quote comparison,
+          risk assessment, and procurement optimization. Ask any question about your
+          procurement operations.
+        </p>
       </div>
 
-      <div className="chat-messages">
-        {messages.map((msg, i) => (
-          <div key={i} className={`chat-message chat-message-${msg.role}`}>
-            {msg.content}
-          </div>
-        ))}
-        {loading && <div className="chat-message chat-message-assistant typing">…</div>}
-      </div>
+      <div className="chat-container">
+        <div className="chat-messages">
+          {messages.length === 0 && (
+            <div className="chat-empty">
+              <p className="chat-empty-icon">💬</p>
+              <p className="chat-empty-text">Start a conversation with FuelLink AI Copilot</p>
+              <p className="chat-empty-hint">
+                Try asking: &ldquo;Compare suppliers for diesel generators&rdquo;
+              </p>
+            </div>
+          )}
+          {messages.map((msg, i) => (
+            <div key={i} className={`chat-message chat-message-${msg.role}`}>
+              {msg.role === 'assistant' && <span className="chat-role">🤖 Copilot</span>}
+              {msg.role === 'user' && <span className="chat-role">👤 You</span>}
+              <div className="chat-content">{msg.content}</div>
+            </div>
+          ))}
+          {loading && (
+            <div className="chat-message chat-message-assistant">
+              <span className="chat-role">🤖 Copilot</span>
+              <div className="chat-content chat-typing">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-      <form className="chat-input" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about procurement, suppliers, or market intelligence…"
-          disabled={loading}
-        />
-        <button type="submit" disabled={loading || !input.trim()}>
-          Send
-        </button>
-      </form>
-    </div>
+        <form className="chat-form" onSubmit={sendMessage}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask about procurement, suppliers, or market intelligence…"
+            disabled={loading}
+            autoFocus
+          />
+          <button type="submit" disabled={loading || !input.trim()} className="chat-submit">
+            {loading ? '…' : '↑'}
+          </button>
+        </form>
+      </div>
+    </AppLayout>
   );
 }
